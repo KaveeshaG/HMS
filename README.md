@@ -4,8 +4,8 @@
 ### Clone the repo
 
 ```shell
-git clone https://github.com/bryanforbes/intern-angular
-cd intern-angular
+git clone https://github.com/KaveeshaG/HMS
+cd hms-client
 ```
 
 ### Install npm packages
