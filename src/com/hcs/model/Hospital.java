@@ -4,17 +4,21 @@ public class Hospital {
 	private int hid;
 	private String HospitalName;
 	private String HospitalAddress;
-	private String HospitalContact;
+	private int HospitalContact;
 	private String HospitalEmail;
 	
-	public Hospital(int hid, String hospitalName, String hospitalAddress, String hospitalContact,
-			String hospitalEmail) {
+
+	public Hospital(int hid, String hospitalName, String hospitalAddress, int hospitalContact, String hospitalEmail) {
 		super();
 		this.hid = hid;
 		HospitalName = hospitalName;
 		HospitalAddress = hospitalAddress;
 		HospitalContact = hospitalContact;
 		HospitalEmail = hospitalEmail;
+	}
+	public Hospital() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	public int getHid() {
 		return hid;
@@ -34,10 +38,10 @@ public class Hospital {
 	public void setHospitalAddress(String hospitalAddress) {
 		HospitalAddress = hospitalAddress;
 	}
-	public String getHospitalContact() {
+	public int getHospitalContact() {
 		return HospitalContact;
 	}
-	public void setHospitalContact(String hospitalContact) {
+	public void setHospitalContact(int hospitalContact) {
 		HospitalContact = hospitalContact;
 	}
 	public String getHospitalEmail() {

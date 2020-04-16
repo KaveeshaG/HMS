@@ -1,140 +1,91 @@
 package com.hcs.controller;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.hcs.model.Hospital;
-import com.hcs.util.DBConnection;
+import com.hcs.service.HospitalService;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
+
+@Path("/hospital")
 public class HospitalController {
+	private  HospitalService appRepo = new HospitalService();
 
-	private static Connection connection;
-	private static PreparedStatement ps;
-	private static ResultSet rs;
+    @GET
+    @Path("/")
+    @Produces(MediaType.TEXT_HTML)
+    public String readHospital() {
+        return appRepo.readHospital();
+    }
 
-	public String AddDoctor(Hospital hospital) {
-		String output = "";
-		try {
-			connection = DBConnection.getConnection();
-			 if (connection == null)
-			 {return "Error while connecting to the database for inserting."; } 
-			
-			ps = connection.prepareStatement(
-					"INSERT INTO  doctor(hid,HospitalName,HospitalAddress,HospitalContact,HospitalEmail)"
-							+ "	VALUES (?,?,?,?,?)");
+    @GET
+    @Path("/hospital/{hid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Hospital readHospital(@PathParam("hid") String hid) {
+        return appRepo.readHospital(hid);
+    }
 
-			ps.setInt(1, 0);
-			ps.setString(2, hospital.getHospitalName());
-			ps.setString(3, hospital.getHospitalAddress());
-			ps.setString(4, hospital.getHospitalContact());
-			ps.setString(5, hospital.getHospitalEmail());
+    @POST
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String insertHospital(@FormParam("hid") int hid, @FormParam("name") String HospitalName, @FormParam("address") String HospitalAddress, @FormParam("contact") int HospitalContact,
+                               @FormParam("email") String HospitalEmail)
+                                {
 
-			ps.execute();
-			 connection.close();
-			 output = "Inserted successfully"; 
+        Hospital hospital = new Hospital();
+        hospital.setHid(hid);
+        hospital.setHospitalName(HospitalName);
+        hospital.setHospitalAddress(HospitalAddress);
+        hospital.setHospitalContact(HospitalContact);
+        hospital.setHospitalEmail(HospitalEmail);
 
-		}
-		 catch (Exception e)
-		 {
-		 output = "Error while inserting the item.";
-		 System.err.println(e.getMessage());
-		 }
-		 return output; 
+        return appRepo.insertHospital(hospital);
+        
+    }
 
-		
-	}
+    @PUT
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String updateHospital(String appData) {
+    	Hospital hospital = new Hospital();
+        JsonObject appObject;
 
-	public List<Hospital> readHospital() {
-		List<Hospital> hospital = new ArrayList<>();
-		try {
-			connection = DBConnection.getConnection();
-			if (connection == null) {
-				System.err.println("connecting failed.");
-			}
-			// Prepare the html table to be displayed
-			
+        appObject = new JsonParser().parse(appData).getAsJsonObject();
+        hospital.setHid(Integer.parseInt(appObject.get("hid").getAsString()));
+        hospital.setHospitalName(appObject.get("HospitalName").getAsString());
+        hospital.setHospitalAddress(appObject.get("HospitalAddress").getAsString());
+        hospital.setHospitalContact(Integer.parseInt(appObject.get("HospitalContact").getAsString()));
+        hospital.setHospitalEmail(appObject.get("hospitalEmail").getAsString());
+        
 
-			Statement stmt = connection.createStatement();
-			rs = stmt.executeQuery("select * from hospital");
-			
+        return appRepo.updateHospital(hospital);
+    }
 
-			// iterate through the rows in the result set
-			while (rs.next()) {
-				Hospital hos = new Hospital();
-				hos.setHid(rs.getInt("hid"));
-				hos.setHospitalName(rs.getString("HospitalName"));
-				hos.setHospitalAddress(rs.getString("HospitalAddress"));
-				hos.setHospitalContact(rs.getString("HospitalContact"));
-				hos.setHospitalEmail(rs.getString("HospitalEmail"));
+    @DELETE
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteHospital(String hospitalData) {
 
-				hospital.add(hos);
-			}
-			connection.close();
-
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
-		return hospital;
-	}
-
-	public String updatedoctor(Hospital hospital) {
-		String output = "";
-		try {
-			connection = DBConnection.getConnection();
-			if (connection == null) {
-				return "Error while connecting to the database for updating.";
-			}
-			// create a prepared statement
-			ps = connection.prepareStatement(
-					"UPDATE doctor SET name=?,address=?,contact=?,email=? WHERE hid=?");
-
-			// binding values
-			ps.setString(1, hospital.getHospitalName());
-			ps.setString(2, hospital.getHospitalAddress());
-			ps.setString(3,hospital.getHospitalContact());
-			ps.setString(4, hospital.getHospitalEmail());
-			ps.setInt(6, hospital.getHid());
-			// execute the statement
-			ps.execute();
-			connection.close();
-			output = "Updated successfully";
-		} catch (Exception e) {
-			output = "Error while updating the item.";
-			System.err.println(e.getMessage());
-		}
-		return output;
-	}
-
-	public String deleteHospital(String hid) {
-		String output = "";
-		try {
-			connection = DBConnection.getConnection();
-			if (connection == null) {
-				return "Error while connecting to the database for deleting.";
-			}
-			// create a prepared statement
-
-			connection = DBConnection.getConnection();
-			ps = connection.prepareStatement("delete from hospital where hid=?");
-			// binding values
-			ps.setInt(1, Integer.parseInt(hid));
-			// execute the statement
-			ps.execute();
-			connection.close();
-			output = "Deleted successfully";
-		} catch (Exception e) {
-			output = "Error while deleting the item. -"+ e.getMessage();
-			System.err.println(e.getMessage());
-		}
-		return output;
-	}
-
+        //Convert the input string to an XML document
+        Document doc = Jsoup.parse(hospitalData, "", Parser.xmlParser());
+        String hospital_id = doc.select("hid").text();
+        return appRepo.deleteItem(hospital_id);
+    }
+	
+	
+	
 }
