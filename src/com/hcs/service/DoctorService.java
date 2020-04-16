@@ -62,11 +62,12 @@ public class DoctorService {
 	@Path("/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateDoctor(@FormParam("DoctorName") String DoctorName, @FormParam("Email") String Email,
+	public String updateDoctor(@FormParam("DoctorId") String DoctorID,@FormParam("DoctorName") String DoctorName, @FormParam("Email") String Email,
 			@FormParam("PhoneNumber") String PhoneNumber, @FormParam("DoctorType") String DoctorType,
 			@FormParam("WorkHospital") String WorkHospital) throws ParseException {
 
 		Doctor doctor = new Doctor();
+		doctor.setDoctorID(Integer.parseInt(DoctorID));
 		doctor.setDoctorName(DoctorName);
 		doctor.setEmail(Email);
 		doctor.setPhoneNumber(Integer.parseInt(PhoneNumber));

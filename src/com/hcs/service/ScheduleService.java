@@ -65,10 +65,11 @@ ScheduleController schedulecontroller = new ScheduleController();
 	@Path("/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateSchedule(@FormParam("hid") String hid, @FormParam("DoctorID") String DoctorID,
+	public String updateSchedule(@FormParam("SchduleID") String SchduleID,@FormParam("hid") String hid, @FormParam("DoctorID") String DoctorID,
 			@FormParam("ScheduleDate") String ScheduleDate, @FormParam("ScheduleTime") String ScheduleTime) throws ParseException {
 
 		Schedule schedule = new Schedule();
+		schedule.setSchduleID(Integer.parseInt(SchduleID));
 		schedule.setHid(Integer.parseInt(hid));
 		schedule.setDoctorID(Integer.parseInt(DoctorID));
 		schedule.setScheduleDate(Date.valueOf(ScheduleDate));

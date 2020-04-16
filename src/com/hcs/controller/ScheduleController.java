@@ -64,18 +64,21 @@ public class ScheduleController {
 			
 
 			Statement stmt = connection.createStatement();
-			rs = stmt.executeQuery("SELECT d.DoctorName,d.DoctorID,s.ScheduleDate,s.ScheduleTime\r\n" + 
-					"FROM schedule s\r\n" + 
-					"INNER JOIN doctor d\r\n" + 
-					"ON d.DoctorID = s.DoctorID");
+			rs = stmt.executeQuery("SELECT d.DoctorName,d.DoctorID,s.ScheduleDate,s.ScheduleTime " + 
+					" FROM schedule s " + 
+					" INNER JOIN doctor d " + 
+					" ON d.DoctorID = s.DoctorID ");
 			
 
 			// iterate through the rows in the result set
 			while (rs.next()) {
 				Schedule sch = new Schedule();
-				sch.setSchduleID(rs.getInt("SchduleID"));
-				//sch.setHid(rs.getInt("hid"));
+				Doctor doc=new Doctor();
+				doc.setDoctorName(rs.getString("DoctorName"));
+				doc.setDoctorID(rs.getInt("DoctorID"));
+				
 				sch.setDoctorID(rs.getInt("DoctorID"));
+				sch.setDoctor(doc);
 				sch.setScheduleDate(rs.getDate("ScheduleDate"));
 				sch.setScheduleTime(rs.getTime("ScheduleTime"));
 				

@@ -12,6 +12,7 @@ public class Schedule {
 	private int DoctorID;
 	private Date ScheduleDate;
 	private Time ScheduleTime;
+	private Doctor doctor;
 	
 	
 	public int getSchduleID() {
@@ -43,6 +44,12 @@ public class Schedule {
 	}
 	public void setScheduleTime(Time scheduleTime) {
 		ScheduleTime = scheduleTime;
+	}
+	public Doctor getDoctor() {
+		return doctor;
+	}
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
 	}
 	
 	
