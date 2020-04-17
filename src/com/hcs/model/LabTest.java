@@ -7,8 +7,15 @@ public class LabTest {
 	private String TestName;
 	private String TestType;
 	private String TestDescription;
+	private Date LabDate;
 
 	
+	public Date getLabDate() {
+		return LabDate;
+	}
+	public void setLabDate(Date labDate) {
+		LabDate = labDate;
+	}
 	public int getLabTestID() {
 		return LabTestID;
 	}

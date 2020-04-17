@@ -1,5 +1,6 @@
 package com.hcs.service;
 
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,12 +38,14 @@ public class LabTestService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertLabTest(@FormParam("TestName") String TestName,
-			@FormParam("TestType") String TestType, @FormParam("TestDescription") String TestDescription) throws ParseException {
+			@FormParam("TestType") String TestType, @FormParam("TestDescription") String TestDescription,@FormParam("LabDate") String LabDate) throws ParseException {
 
 		LabTest lab = new LabTest();
 		lab.setTestName(TestName);
 		lab.setTestType(TestType);
 		lab.setTestDescription(TestDescription);
+		lab.setLabDate(Date.valueOf(LabDate));
+		
 		return labController.AddLabTest(lab);
 	}
 
@@ -60,14 +63,14 @@ public class LabTestService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateLabTest(@FormParam("LabTestID") String LabTestID,@FormParam("TestName") String TestName, @FormParam("TestType") String TestType,
-			@FormParam("TestDescription") String TestDescription) throws ParseException {
+			@FormParam("TestDescription") String TestDescription,@FormParam("LabDate") String LabDate) throws ParseException {
 
 		LabTest lab = new LabTest();
 		lab.setLabTestID(Integer.parseInt(LabTestID));
 		lab.setTestName(TestName);
 		lab.setTestType(TestType);
 		lab.setTestDescription(TestDescription);
-		
+		lab.setLabDate(Date.valueOf(LabDate));
 
 		return labController.updateLabTest(lab);
 	}

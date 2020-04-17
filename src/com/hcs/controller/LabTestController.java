@@ -26,13 +26,14 @@ public class LabTestController {
 			 {return "Error while connecting to the database for inserting."; } 
 			
 			ps = connection.prepareStatement(
-					"INSERT INTO  labtest(LabTestID,TestName,TestType,TestDescription) "
-							+ "	VALUES (?,?,?,?)");
+					"INSERT INTO  labtest(LabTestID,TestName,TestType,TestDescription,LabDate) "
+							+ "	VALUES (?,?,?,?,?)");
 
 			ps.setInt(1, 0);
 			ps.setString(2, labtest.getTestName());
 			ps.setString(3, labtest.getTestType());
 			ps.setString(4, labtest.getTestDescription());
+			ps.setDate(5, labtest.getLabDate());
 	
 		
 
@@ -72,7 +73,8 @@ public class LabTestController {
 				lab.setTestName(rs.getString("TestName"));
 				lab.setTestType(rs.getString("TestType"));
 				lab.setTestDescription(rs.getString("TestDescription"));
-		
+				lab.setLabDate(rs.getDate("LabDate"));
+
 
 				labtests.add(lab);
 			}
@@ -93,13 +95,15 @@ public class LabTestController {
 			}
 			// create a prepared statement
 			ps = connection.prepareStatement(
-					"UPDATE labtest SET TestName=?,TestType=?,TestDescription=? WHERE LabTestID=?");
+					"UPDATE labtest SET TestName=?,TestType=?,TestDescription=?,LabDate=? WHERE LabTestID=?");
 
 			// binding values
 			ps.setString(1, labtest.getTestName());
 			ps.setString(2, labtest.getTestType());
 			ps.setString(3,labtest.getTestDescription());
-			ps.setInt(4, labtest.getLabTestID());
+			ps.setDate(4, labtest.getLabDate());
+			ps.setInt(5, labtest.getLabTestID());
+			
 			
 			// execute the statement
 			ps.execute();
