@@ -12,15 +12,16 @@ import java.sql.Date;
 import java.util.List;
 
 import com.hcs.model.Bill;
+import com.hcs.model.Payment;
 import com.hcs.util.DBConnection;
 
-public class BillController {
+public class PaymentController {
 
 	private static Connection connection;
 	private static PreparedStatement ps;
 	private static ResultSet rs;
 
-	public String AddBill(Bill bill) {
+	public String AddPayment(Payment payment) {
 		String output = "";
 		try {
 			connection = DBConnection.getConnection();
@@ -28,15 +29,17 @@ public class BillController {
 			 {return "Error while connecting to the database for inserting."; } 
 			
 			ps = connection.prepareStatement(
-					"INSERT INTO  bill(BillID,BillType,BillDate,BillAmount,ReferenceID,ReferenceType) "
+					"INSERT INTO  payment(PaymentID,BillID,PaymentDate,PaymentAmount,PaymentType,PaymentDescription)"
 							+ "	VALUES (?,?,?,?,?,?)");
+			
+		
 
 			ps.setInt(1, 0);
-			ps.setString(2,bill.getBillType());
-			ps.setDate(3, (Date) bill.getBillDate());
-			ps.setDouble(4, bill.getBillAmount());
-			ps.setString(5,bill.getReferenceID());
-			ps.setString(6,bill.getReferenceType());
+			ps.setString(2, payment.getBillID());
+			ps.setDate(3, (Date) payment.getPaymentDate());
+			ps.setDouble(4, payment.getPaymentAmount());
+			ps.setString(5, payment.getPaymentType());
+			ps.setString(6, payment.getPaymentDescription());
 			
 			ps.execute();
 			 connection.close();
@@ -53,8 +56,8 @@ public class BillController {
 		
 	}
 
-	public List<Bill> readBill() {
-		List<Bill> bill = new ArrayList<>();
+	public List<Payment> readPayment() {
+		List<Payment> payment = new ArrayList<>();
 		try {
 			connection = DBConnection.getConnection();
 			if (connection == null) {
@@ -64,30 +67,31 @@ public class BillController {
 			
 
 			Statement stmt = connection.createStatement();
-			rs = stmt.executeQuery("select * from bill");
+			rs = stmt.executeQuery("select * from payment");
 			
 
 			// iterate through the rows in the result set
 			while (rs.next()) {
-				Bill b = new Bill();
-				b.setBillID(rs.getInt("BillID"));
-				b.setBillType(rs.getString("BillType"));
-				b.setBillDate(rs.getDate("BillDate"));
-				b.setBillAmount(rs.getFloat("BillAmount"));
-				b.setReferenceID(rs.getString("ReferenceID"));
-				b.setReferenceType(rs.getString("ReferenceType"));
+				Payment pay = new Payment();
+				pay.setPaymentID(rs.getInt("PaymentID"));
+				pay.setBillID(rs.getString("BillID"));
+				pay.setPaymentDate(rs.getDate("PaymentDate"));
+				pay.setPaymentAmount(rs.getDouble("PaymentAmount"));
+				pay.setPaymentType(rs.getString("PaymentType"));
+				pay.setPaymentDescription(rs.getString("PaymentDescription"));
+			    
 				
-				bill.add(b);
+				payment.add(pay);
 			}
 			connection.close();
 
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return bill;
+		return payment;
 	}
 
-	public String updatebill(Bill bill) {
+	public String updatepayment(Payment payment) {
 		String output = "";
 		try {
 			connection = DBConnection.getConnection();
@@ -96,15 +100,15 @@ public class BillController {
 			}
 			// create a prepared statement
 			ps = connection.prepareStatement(
-					"UPDATE bill SET BillType=?,BillDate=?,BillAmount=?,ReferenceID=?,ReferenceType=? WHERE BillID=?");
+					"UPDATE payment SET BillID=?,PaymentDate=?,PaymentAmount=?,PaymentType=?,PaymentDescription=? WHERE PaymentID=?");
 
 			// binding values
-			ps.setString(1, bill.getBillType());
-			ps.setDate(2, (Date) bill.getBillDate());
-			ps.setDouble(3,bill.getBillAmount());
-			ps.setString(4, bill.getReferenceID());
-			ps.setString(5, bill.getReferenceType());
-			ps.setInt(6, bill.getBillID());
+			ps.setString(1, payment.getBillID());
+			ps.setDate(2, (Date) payment.getPaymentDate());
+			ps.setDouble(3,payment.getPaymentAmount());
+			ps.setString(4, payment.getPaymentType());
+			ps.setString(5, payment.getPaymentDescription());
+			ps.setInt(6, payment.getPaymentID());
 			
 			// execute the statement
 			ps.execute();
@@ -117,7 +121,7 @@ public class BillController {
 		return output;
 	}
 
-	public String deleteBill(String BillID) {
+	public String deletePayment(String PaymentID) {
 		String output = "";
 		try {
 			connection = DBConnection.getConnection();
@@ -127,9 +131,9 @@ public class BillController {
 			// create a prepared statement
 
 			connection = DBConnection.getConnection();
-			ps = connection.prepareStatement("delete from bill where BillID=?");
+			ps = connection.prepareStatement("delete from payment where PaymentID=?");
 			// binding values
-			ps.setInt(1, Integer.parseInt(BillID));
+			ps.setInt(1, Integer.parseInt(PaymentID));
 			// execute the statement
 			ps.execute();
 			connection.close();

@@ -49,12 +49,14 @@ public class BillService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertBill(@FormParam("BillType") String BillType, @FormParam("BillDate") String BillDate,
-			@FormParam("BillAmount") String BillAmount) throws ParseException {
+			@FormParam("BillAmount") String BillAmount, @FormParam("ReferenceID") String ReferenceID, @FormParam("ReferenceType") String ReferenceType) throws ParseException {
 
 		Bill bill = new Bill();
 		bill.setBillType(BillType);
 		bill.setBillDate(Date.valueOf(BillDate));
 		bill.setBillAmount(Double.parseDouble(BillAmount));
+		bill.setReferenceID(ReferenceID);
+		bill.setReferenceType(ReferenceType);
 		
 
 		return billController.AddBill(bill);
@@ -66,13 +68,15 @@ public class BillService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateBill(@FormParam("BillID") String BillID,@FormParam("BillType") String BillType, @FormParam("BillDate") String BillDate,
-			@FormParam("BillAmount") String BillAmount) throws ParseException {
+			@FormParam("BillAmount") String BillAmount, @FormParam("ReferenceID") String ReferenceID, @FormParam("ReferenceType") String ReferenceType) throws ParseException {
 
 		Bill bill = new Bill();
 		bill.setBillID(Integer.parseInt(BillID));
 	    bill.setBillType(BillType);
 		bill.setBillDate(Date.valueOf(BillDate));
 	    bill.setBillAmount(Double.parseDouble(BillAmount));
+	    bill.setReferenceID(ReferenceID);
+	    bill.setReferenceType(ReferenceType);
 		
 
 		return billController.updatebill(bill);

@@ -9,6 +9,8 @@ public class Bill {
 	private String BillType;
 	private Date BillDate;
 	private Double BillAmount;
+	private String ReferenceID;
+	private String ReferenceType;
 	
 	public int getBillID() {
 		return BillID;
@@ -33,6 +35,18 @@ public class Bill {
 	}
 	public void setBillAmount(double billAmount) {
 		BillAmount = billAmount;
+	}
+	public String getReferenceID() {
+		return ReferenceID;
+	}
+	public void setReferenceID(String referenceID) {
+		ReferenceID = referenceID;
+	}
+	public String getReferenceType() {
+		return ReferenceType;
+	}
+	public void setReferenceType(String referenceType) {
+		ReferenceType = referenceType;
 	}
 	
 	
