@@ -27,7 +27,7 @@ public class DoctorService {
 	@GET
 	@Path("/read")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public String readItems() {
+	public String readDoctor() {
 		return new Gson().toJson(doctorController.readDoctors());
 	}
 
@@ -75,6 +75,13 @@ public class DoctorService {
 		doctor.setWorkHospital(WorkHospital);
 
 		return doctorController.updatedoctor(doctor);
+	}
+	
+	@GET
+	@Path("/search/{id}")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String searchDoctor(@PathParam("id")String DoctorId) {
+		return new Gson().toJson(doctorController.searchDoctors(DoctorId));
 	}
 	
 	

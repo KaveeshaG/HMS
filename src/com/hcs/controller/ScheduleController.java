@@ -8,15 +8,26 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
+
 import com.hcs.model.Doctor;
+import com.hcs.model.Hospital;
 import com.hcs.model.Schedule;
 import com.hcs.util.DBConnection;
+import com.owlike.genson.ext.jaxrs.GensonJsonConverter;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
 
 public class ScheduleController {
 	
 	private static Connection connection;
 	private static PreparedStatement ps;
 	private static ResultSet rs;
+	public static final String HOSPITAL_URI="http://localhost:8081/HospitalService/HospitalService/Hospital";
 	
 	
 	public String AddSchedule(Schedule schedule) {
@@ -64,7 +75,7 @@ public class ScheduleController {
 			
 
 			Statement stmt = connection.createStatement();
-			rs = stmt.executeQuery("SELECT d.DoctorName,d.DoctorID,s.ScheduleDate,s.ScheduleTime " + 
+			rs = stmt.executeQuery("SELECT d.DoctorName,d.DoctorID,s.ScheduleDate,s.ScheduleTime,s.hid,s.SchduleID " + 
 					" FROM schedule s " + 
 					" INNER JOIN doctor d " + 
 					" ON d.DoctorID = s.DoctorID ");
@@ -72,6 +83,17 @@ public class ScheduleController {
 
 			// iterate through the rows in the result set
 			while (rs.next()) {
+				ClientConfig cfg = new DefaultClientConfig(GensonJsonConverter.class);
+				Client client = Client.create(cfg);
+				WebResource webResource = client.resource(HOSPITAL_URI+"/search/"+rs.getInt("hid"));
+
+				// you can map it to a pojo, no need to have a string or map
+				Hospital hospital = webResource
+				                .accept(MediaType.APPLICATION_JSON)
+				                .get(Hospital.class);
+				
+//				Hospital hospital=response.getEntity(Hospital.class);
+				
 				Schedule sch = new Schedule();
 				Doctor doc=new Doctor();
 				doc.setDoctorName(rs.getString("DoctorName"));
@@ -79,8 +101,11 @@ public class ScheduleController {
 				
 				sch.setDoctorID(rs.getInt("DoctorID"));
 				sch.setDoctor(doc);
+				sch.setHospital(hospital);
 				sch.setScheduleDate(rs.getDate("ScheduleDate"));
 				sch.setScheduleTime(rs.getTime("ScheduleTime"));
+				sch.setSchduleID(rs.getInt("SchduleID"));
+				sch.setHid(rs.getInt("hid"));
 				
 
 				schedules.add(sch);
@@ -147,6 +172,47 @@ public class ScheduleController {
 		}
 		return output;
 	}
+	
+	
+	public Schedule searchSchedule(String id) {
+		Schedule sch = new Schedule();
+		try {
+			connection = DBConnection.getConnection();
+			if (connection == null) {
+				System.err.println("connecting failed.");
+			}
+			// Prepare the html table to be displayed
+			
+
+			Statement stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT d.DoctorName,d.DoctorID,s.ScheduleDate,s.ScheduleTime " + 
+					" FROM schedule s " + 
+					" INNER JOIN doctor d " + 
+					" ON d.DoctorID = s.DoctorID where SchduleID="+id+"");
+			
+
+			// iterate through the rows in the result set
+			while (rs.next()) {
+				
+				Doctor doc=new Doctor();
+				doc.setDoctorName(rs.getString("DoctorName"));
+				doc.setDoctorID(rs.getInt("DoctorID"));
+				
+				sch.setDoctorID(rs.getInt("DoctorID"));
+				sch.setDoctor(doc);
+				sch.setScheduleDate(rs.getDate("ScheduleDate"));
+				sch.setScheduleTime(rs.getTime("ScheduleTime"));
+				
+			}
+			connection.close();
+
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return sch;
+	}
+	
+	
 
 
 }

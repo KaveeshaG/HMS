@@ -13,8 +13,15 @@ public class Schedule {
 	private Date ScheduleDate;
 	private Time ScheduleTime;
 	private Doctor doctor;
+	private Hospital hospital;
 	
 	
+	public Hospital getHospital() {
+		return hospital;
+	}
+	public void setHospital(Hospital hospital) {
+		this.hospital = hospital;
+	}
 	public int getSchduleID() {
 		return SchduleID;
 	}

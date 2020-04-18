@@ -19,6 +19,7 @@ public class DoctorController {
 	private static Connection connection;
 	private static PreparedStatement ps;
 	private static ResultSet rs;
+	
 
 	public String AddDoctor(Doctor doctor) {
 		String output = "";
@@ -138,5 +139,39 @@ public class DoctorController {
 		}
 		return output;
 	}
+	
+	
+	public Doctor searchDoctors(String id) {
+		Doctor doc = new Doctor();
+		try {
+			connection = DBConnection.getConnection();
+			if (connection == null) {
+				System.err.println("connecting failed.");
+			}
+			// Prepare the html table to be displayed
+			
+
+			Statement stmt = connection.createStatement();
+			rs = stmt.executeQuery("select * from doctor where DoctorID="+id+"");
+			
+
+			// iterate through the rows in the result set
+			
+			while (rs.next()) {
+				
+				doc.setDoctorID(rs.getInt("DoctorID"));
+				doc.setDoctorName(rs.getString("DoctorName"));
+				doc.setPhoneNumber(rs.getInt("PhoneNumber"));
+				doc.setEmail(rs.getString("Email"));
+				doc.setDoctorType(rs.getString("DoctorType"));
+			}
+			connection.close();
+
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return doc;
+	}
+
 
 }

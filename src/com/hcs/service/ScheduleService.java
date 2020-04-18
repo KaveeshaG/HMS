@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 //For JSON
 import com.google.gson.*;
 import com.hcs.controller.ScheduleController;
@@ -32,6 +34,7 @@ ScheduleController schedulecontroller = new ScheduleController();
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String readSchedule() {
 		return new Gson().toJson(schedulecontroller.readSchedule());
+//		Response.ok(schedulecontroller.readSchedule()).build();
 	}
 	
 	
@@ -79,7 +82,12 @@ ScheduleController schedulecontroller = new ScheduleController();
 	}
 	
 	
-	
+	@GET
+	@Path("/search/{id}")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String searchSchedule(@PathParam("id")String SchduleID) {
+		return new Gson().toJson(schedulecontroller.searchSchedule(SchduleID));
+	}
 
 	
 	
