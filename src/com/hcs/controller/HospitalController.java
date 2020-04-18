@@ -3,12 +3,8 @@ package com.hcs.controller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.hcs.model.Hospital;
@@ -125,7 +121,7 @@ public class HospitalController {
 			// create a prepared stateme
 
 			connection = DBConnection.getConnection();
-			ps = connection.prepareStatement("delete from doctor where DoctorID=?");
+			ps = connection.prepareStatement("delete from hospital where hid=?");
 			// binding values
 			ps.setInt(1, Integer.parseInt(hid));
 			// execute the statement

@@ -1,10 +1,6 @@
 package com.hcs.service;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 //For REST Service
 import javax.ws.rs.*;
@@ -15,9 +11,6 @@ import com.hcs.controller.HospitalController;
 import com.hcs.model.Hospital;
 
 //For XML
-import org.jsoup.*;
-import org.jsoup.parser.*;
-import org.jsoup.nodes.Document;
 
 @Path("/Hospital")
 public class HospitalService {
