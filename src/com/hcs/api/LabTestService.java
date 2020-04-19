@@ -19,7 +19,7 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 //For JSON
 import com.google.gson.*;
-import com.hcs.dto.Doctor;
+import com.hcs.api.LabTestService;
 import com.owlike.genson.ext.jaxrs.GensonJsonConverter;
 
 
@@ -32,16 +32,18 @@ import org.jsoup.nodes.Document;
 
 
 
-@Path("/Doctor")
-public class DoctorService {
+@Path("/LabTest")
+public class LabTestService {
+	
+	
 
-	public static final String DOCTOR_URI="http://localhost:8081/DoctorService/DoctorService/Doctor";
+	public static final String LABTEST_URI="http://localhost:8089/LabTestService/LabTestService/LabTest";
 
 	@GET
 	@Path("/read")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String readDoctor() throws URISyntaxException {
-		URI uri=new URI(DOCTOR_URI+"/read/");
+	public String readLabTest() throws URISyntaxException {
+		URI uri=new URI(LABTEST_URI+"/read/");
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(uri);
 		// you can map it to a pojo, no need to have a string or map
@@ -53,18 +55,22 @@ public class DoctorService {
 	@Path("/insert")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertDoctor(@FormParam("DoctorName") String DoctorName, @FormParam("Email") String Email,
-			@FormParam("PhoneNumber") String PhoneNumber, @FormParam("DoctorType") String DoctorType,
-			@FormParam("WorkDOCTOR") String WorkDOCTOR) throws ParseException {
+	public String insertLabTest(
+			@FormParam("PatientID") String PatientID,
+			@FormParam("TestName") String TestName,
+			@FormParam("TestType") String TestType, 
+			@FormParam("TestDescription") String TestDescription,
+			@FormParam("LabDate") String LabDate) throws ParseException {
 		
 		Form form =new Form();
-		form.param("DoctorName", DoctorName);
-		form.param("Email", Email);
-		form.param("PhoneNumber", PhoneNumber);
-		form.param("WorkDOCTOR", WorkDOCTOR);
+		form.param("PatientID", PatientID);
+		form.param("TestName", TestName);
+		form.param("TestType", TestType);
+		form.param("TestDescription", TestDescription);
+		form.param("LabDate", LabDate);
 		
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(DOCTOR_URI+"/insert/");
+		WebTarget target = client.target(LABTEST_URI+"/insert/");
 		String response = target.request(MediaType.APPLICATION_JSON)
 		                        .accept(MediaType.TEXT_PLAIN_TYPE)
 		                        .post(Entity.form(form), String.class);
@@ -75,11 +81,11 @@ public class DoctorService {
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteDoctor(@PathParam("id")String DoctorId) {
+	public String deleteLabTest(@PathParam("id")String LabTestId) {
 
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(DOCTOR_URI);
-		String response = target.path(DoctorId)
+		WebTarget target = client.target(LABTEST_URI);
+		String response = target.path(LabTestId)
 								.request(MediaType.APPLICATION_JSON)
 		                        .accept(MediaType.TEXT_PLAIN_TYPE)
 		                        .delete(String.class);
@@ -92,19 +98,24 @@ public class DoctorService {
 	@Path("/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateDoctor(@FormParam("DoctorId") String DoctorID,@FormParam("DoctorName") String DoctorName, @FormParam("Email") String Email,
-			@FormParam("PhoneNumber") String PhoneNumber, @FormParam("DoctorType") String DoctorType,
-			@FormParam("WorkDOCTOR") String WorkDOCTOR) throws ParseException {
-
+	public String updateLabTest(
+			@FormParam("LabTestID") String LabTestID,
+			@FormParam("PatientID") String PatientID,
+			@FormParam("TestName") String TestName, 
+			@FormParam("TestType") String TestType,
+			@FormParam("TestDescription") String TestDescription,
+			@FormParam("LabDate") String LabDate) throws ParseException {
+		
 		Form form =new Form();
-		form.param("DoctorId", DoctorID);
-		form.param("DoctorName", DoctorName);
-		form.param("Email", Email);
-		form.param("PhoneNumber", PhoneNumber);
-		form.param("WorkDOCTOR", WorkDOCTOR);
+		form.param("LabTestID", LabTestID);
+		form.param("PatientID", PatientID);
+		form.param("TestName", TestName);
+		form.param("TestType", TestType);
+		form.param("TestDescription", TestDescription);
+		form.param("LabDate", LabDate);
 		
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(DOCTOR_URI+"/update/");
+		WebTarget target = client.target(LABTEST_URI+"/update/");
 		String response = target.request(MediaType.APPLICATION_JSON)
 		                        .accept(MediaType.TEXT_PLAIN_TYPE)
 		                        .put(Entity.form(form), String.class);
@@ -112,19 +123,7 @@ public class DoctorService {
 		return response;
 	}
 	
-	@GET
-	@Path("/search/{id}")
-	@Produces({ MediaType.TEXT_PLAIN })
-	public String searchDoctor(@PathParam("id")String DoctorId) {
-		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(DOCTOR_URI+"/search");
-		String response = target.path(DoctorId)
-								.request(MediaType.APPLICATION_JSON)
-		                        .get(String.class);
 
-		return response;
-	}
-	
 	
 
 }

@@ -34,13 +34,13 @@ import org.jsoup.nodes.Document;
 @Path("/Schedule")
 public class ScheduleService {
 
-	public static final String HOSPITAL_URI="http://localhost:8081/ScheduleService/ScheduleService/Schedule";
+	public static final String SCHEDULE_URI="http://localhost:8081/ScheduleService/ScheduleService/Schedule";
 
 	@GET
 	@Path("/read")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String readSchedule() throws URISyntaxException {
-		URI uri=new URI(HOSPITAL_URI+"/read/");
+		URI uri=new URI(SCHEDULE_URI+"/read/");
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(uri);
 		// you can map it to a pojo, no need to have a string or map
@@ -63,7 +63,7 @@ public class ScheduleService {
 		form.param("ScheduleTime", ScheduleTime);
 		
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(HOSPITAL_URI+"/insert/");
+		WebTarget target = client.target(SCHEDULE_URI+"/insert/");
 		String response = target.request(MediaType.APPLICATION_JSON)
 		                        .accept(MediaType.TEXT_PLAIN_TYPE)
 		                        .post(Entity.form(form), String.class);
@@ -77,7 +77,7 @@ public class ScheduleService {
 	public String deleteDoctor(@PathParam("id")String ScheduleId) {
 
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(HOSPITAL_URI);
+		WebTarget target = client.target(SCHEDULE_URI);
 		String response = target.path(ScheduleId)
 								.request(MediaType.APPLICATION_JSON)
 		                        .accept(MediaType.TEXT_PLAIN_TYPE)
@@ -102,7 +102,7 @@ public class ScheduleService {
 		form.param("ScheduleTime", ScheduleTime);
 		
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(HOSPITAL_URI+"/update/");
+		WebTarget target = client.target(SCHEDULE_URI+"/update/");
 		String response = target.request(MediaType.APPLICATION_JSON)
 		                        .accept(MediaType.TEXT_PLAIN_TYPE)
 		                        .put(Entity.form(form), String.class);
@@ -115,7 +115,7 @@ public class ScheduleService {
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String searchSchedule(@PathParam("id")String DoctorId) {
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(HOSPITAL_URI+"/search");
+		WebTarget target = client.target(SCHEDULE_URI+"/search");
 		String response = target.path(DoctorId)
 								.request(MediaType.APPLICATION_JSON)
 		                        .get(String.class);
