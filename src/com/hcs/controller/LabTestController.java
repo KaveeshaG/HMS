@@ -26,14 +26,15 @@ public class LabTestController {
 			 {return "Error while connecting to the database for inserting."; } 
 			
 			ps = connection.prepareStatement(
-					"INSERT INTO  labtest(LabTestID,TestName,TestType,TestDescription,LabDate) "
-							+ "	VALUES (?,?,?,?,?)");
+					"INSERT INTO  labtest(LabTestID,PatientID,TestName,TestType,TestDescription,LabDate) "
+							+ "	VALUES (?,?,?,?,?,?)");
 
 			ps.setInt(1, 0);
-			ps.setString(2, labtest.getTestName());
-			ps.setString(3, labtest.getTestType());
-			ps.setString(4, labtest.getTestDescription());
-			ps.setDate(5, labtest.getLabDate());
+			ps.setInt(2, labtest.getPatientID());
+			ps.setString(3, labtest.getTestName());
+			ps.setString(4, labtest.getTestType());
+			ps.setString(5, labtest.getTestDescription());
+			ps.setDate(6, labtest.getLabDate());
 	
 		
 
@@ -70,6 +71,7 @@ public class LabTestController {
 			while (rs.next()) {
 				LabTest lab = new LabTest();
 				lab.setLabTestID(rs.getInt("LabTestID"));
+				lab.setPatientID(rs.getInt("PatientID"));
 				lab.setTestName(rs.getString("TestName"));
 				lab.setTestType(rs.getString("TestType"));
 				lab.setTestDescription(rs.getString("TestDescription"));
@@ -95,14 +97,15 @@ public class LabTestController {
 			}
 			// create a prepared statement
 			ps = connection.prepareStatement(
-					"UPDATE labtest SET TestName=?,TestType=?,TestDescription=?,LabDate=? WHERE LabTestID=?");
+					"UPDATE labtest SET PatientID=?,TestName=?,TestType=?,TestDescription=?,LabDate=? WHERE LabTestID=?");
 
 			// binding values
-			ps.setString(1, labtest.getTestName());
-			ps.setString(2, labtest.getTestType());
-			ps.setString(3,labtest.getTestDescription());
-			ps.setDate(4, labtest.getLabDate());
-			ps.setInt(5, labtest.getLabTestID());
+			ps.setInt(1, labtest.getPatientID());
+			ps.setString(2, labtest.getTestName());
+			ps.setString(3, labtest.getTestType());
+			ps.setString(4,labtest.getTestDescription());
+			ps.setDate(5, labtest.getLabDate());
+			ps.setInt(6, labtest.getLabTestID());
 			
 			
 			// execute the statement

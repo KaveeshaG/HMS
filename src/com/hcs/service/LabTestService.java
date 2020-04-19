@@ -37,10 +37,15 @@ public class LabTestService {
 	@Path("/insert")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertLabTest(@FormParam("TestName") String TestName,
-			@FormParam("TestType") String TestType, @FormParam("TestDescription") String TestDescription,@FormParam("LabDate") String LabDate) throws ParseException {
+	public String insertLabTest(
+			@FormParam("PatientID") String PatientID,
+			@FormParam("TestName") String TestName,
+			@FormParam("TestType") String TestType, 
+			@FormParam("TestDescription") String TestDescription,
+			@FormParam("LabDate") String LabDate) throws ParseException {
 
 		LabTest lab = new LabTest();
+		lab.setPatientID(Integer.parseInt(PatientID));
 		lab.setTestName(TestName);
 		lab.setTestType(TestType);
 		lab.setTestDescription(TestDescription);
@@ -62,11 +67,17 @@ public class LabTestService {
 	@Path("/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateLabTest(@FormParam("LabTestID") String LabTestID,@FormParam("TestName") String TestName, @FormParam("TestType") String TestType,
-			@FormParam("TestDescription") String TestDescription,@FormParam("LabDate") String LabDate) throws ParseException {
+	public String updateLabTest(
+			@FormParam("LabTestID") String LabTestID,
+			@FormParam("PatientID") String PatientID,
+			@FormParam("TestName") String TestName, 
+			@FormParam("TestType") String TestType,
+			@FormParam("TestDescription") String TestDescription,
+			@FormParam("LabDate") String LabDate) throws ParseException {
 
 		LabTest lab = new LabTest();
 		lab.setLabTestID(Integer.parseInt(LabTestID));
+		lab.setPatientID(Integer.parseInt(PatientID));
 		lab.setTestName(TestName);
 		lab.setTestType(TestType);
 		lab.setTestDescription(TestDescription);
