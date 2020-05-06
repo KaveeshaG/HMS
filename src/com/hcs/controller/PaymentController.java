@@ -57,13 +57,19 @@ public class PaymentController {
 	}
 
 	public List<Payment> readPayment() {
-		List<Payment> payment = new ArrayList<>();
+		
+		String output = "";
+		
+		  List<Payment> payment = new ArrayList<>();
+		
 		try {
 			connection = DBConnection.getConnection();
 			if (connection == null) {
 				System.err.println("connecting failed.");
 			}
-			// Prepare the html table to be displayed
+
+			
+			
 			
 
 			Statement stmt = connection.createStatement();
@@ -79,16 +85,24 @@ public class PaymentController {
 				pay.setPaymentAmount(rs.getDouble("PaymentAmount"));
 				pay.setPaymentType(rs.getString("PaymentType"));
 				pay.setPaymentDescription(rs.getString("PaymentDescription"));
+				
+				
+				
+				
 			    
 				
 				payment.add(pay);
 			}
 			connection.close();
-
+			
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 		return payment;
+		
+		
+		
+		
 	}
 
 	public String updatepayment(Payment payment) {
